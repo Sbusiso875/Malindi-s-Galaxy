@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>A Galaxy For You, Malindi</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- Background song: drop your own legally-obtained file named "my-baby-lady-zamar.mp3"
+     in the same folder as this HTML file. It starts at 0:25 right after the password is accepted. -->
+<audio id="bg-audio" preload="auto" loop>
+  <source src="my-baby-lady-zamar.mp3" type="audio/mpeg">
+</audio>
+<button id="music-fallback-btn" title="Play music" style="position:fixed; top:16px; left:16px; z-index:200; display:none; background:rgba(255,255,255,0.15); border:1px solid rgba(255,255,255,0.4); color:#fff; width:38px; height:38px; border-radius:50%; font-size:16px; cursor:pointer;">🎵</button>
+
+<!-- ================= SCREEN 1: ENTER ================= -->
+<section class="screen active" id="screen-enter">
+  <canvas class="bg-layer" id="stars-enter"></canvas>
+  <div class="glow-card">
+    <div class="planet-ring"></div>
+    <h1 class="title">A Galaxy For My Galaxy</h1>
+    <p class="subtitle">Happiest Birthday My Malindi 💜</p>
+    <button class="glow-btn" id="enter-btn">Enter my world</button>
+  </div>
+</section>
+
+<!-- ================= SCREEN 2: PASSWORD ================= -->
+<section class="screen" id="screen-password">
+  <canvas class="bg-layer" id="stars-password"></canvas>
+  <div class="heart-rain-layer" id="heart-rain"></div>
+  <div class="glow-card">
+    <h1 class="title" style="font-size:26px;">This world is just for you</h1>
+    <p class="subtitle">Enter the secret word to step inside</p>
+    <input type="password" id="pw-input" placeholder="• • • • • • • •" autocomplete="off">
+    <div id="pw-hint">Enter special name ✨</div>
+    <button class="glow-btn" id="pw-submit">Unlock</button>
+  </div>
+</section>
+
+<!-- ================= SCREEN 3: CAKE ================= -->
+<section class="screen" id="screen-cake">
+  <canvas class="bg-layer" id="stars-cake"></canvas>
+  <div class="cake-wrap">
+    <div class="make-a-wish">Make a wish ✨</div>
+    <div class="cake-sub">close your eyes..........… and blow</div>
+    <div class="cake" id="cake">
+      <div class="tier tier3"></div>
+      <div class="tier tier2"></div>
+      <div class="tier tier1"></div>
+      <div class="candle">
+        <div class="flame" id="flame"></div>
+      </div>
+    </div>
+    <div class="cake-actions">
+      <div class="blow-hint" id="blow-hint">tap the flame to blow out your candle 🕯️</div>
+      <button class="glow-btn" id="continue-btn" style="display:none;">Continue</button>
+    </div>
+  </div>
+</section>
+
+<!-- ================= SCREEN 3.75: FLOWERS ================= -->
+<section class="screen" id="screen-flowers">
+  <div class="farm-sun"></div>
+  <div class="farm-cloud f1"></div>
+  <div class="farm-cloud f2"></div>
+  <div class="farm-sky-text">
+    <p class="flores-para-ti">🌻 Flores para ti</p>
+    <h1 class="te-amo">TE AMO</h1>
+  </div>
+
+  <div class="farm-hills"></div>
+  <div class="farm-ground"></div>
+  <div class="farm-path"></div>
+  <div id="farm-pixie-layer"></div>
+
+  <div class="barn">
+    <div class="barn-shadow"></div>
+    <div class="barn-roof-side"></div>
+    <div class="barn-roof-front"></div>
+    <div class="barn-vane"></div>
+    <div class="barn-side"></div>
+    <div class="barn-front">
+      <div class="barn-window"></div>
+      <div class="barn-door"></div>
+    </div>
+  </div>
+
+  <div class="shed">
+    <div class="shed-roof"></div>
+    <div class="shed-body"><div class="shed-door"></div></div>
+  </div>
+
+  <div class="farmhouse">
+    <div class="fh-chimney"></div>
+    <div class="fh-roof"></div>
+    <div class="fh-body">
+      <div class="fh-window left"></div>
+      <div class="fh-window right"></div>
+      <div class="fh-door"></div>
+    </div>
+  </div>
+
+  <div class="garden-patch" id="garden-patch"></div>
+
+  <div class="swing" id="swing">
+    <div class="swing-bar"></div>
+    <div class="swing-frame"></div>
+    <div class="swing-frame right2"></div>
+    <div class="swing-ropes"></div>
+    <div class="swing-ropes r2"></div>
+    <div class="swing-seat"></div>
+  </div>
+
+  <div class="farm-couple">
+    <div class="farm-hamster" id="farm-male">
+      <div class="hamster hamster-a">
+        <div class="hamster-ear ea1"></div><div class="hamster-ear ea2"></div>
+        <div class="hamster-head">
+          <div class="cheek left"></div><div class="cheek right"></div>
+          <div class="hamster-eye"></div><div class="hamster-eye e2"></div><div class="hamster-nose"></div>
+        </div>
+        <div class="hamster-body"></div>
+      </div>
+      <div class="held-flower" id="male-flower">🌷</div>
+    </div>
+    <div class="farm-hamster" id="farm-female">
+      <div class="hamster hamster-b">
+        <div class="hamster-ear eb1"></div><div class="hamster-ear eb2"></div>
+        <div class="hamster-head">
+          <div class="bow"></div>
+          <div class="cheek left"></div><div class="cheek right"></div>
+          <div class="hamster-eye"></div><div class="hamster-eye e2"></div><div class="hamster-nose"></div>
+        </div>
+        <div class="hamster-body"></div>
+      </div>
+      <div class="held-flower" id="female-flower">🌷</div>
+      <div class="kiss-heart" id="kiss-heart">💗</div>
+    </div>
+  </div>
+
+  <button class="glow-btn" id="flowers-continue-btn">Continue</button>
+</section>
+
+<!-- ================= SCREEN 3.8: LOVE TREE COUNTER ================= -->
+<section class="screen" id="screen-lovetree">
+  <div class="Love__You">
+    <div class="top-row">
+      <div class="text-col" id="lt-textCol">
+        <h1 class="lt-title">Para el amor de mi vida:</h1>
+        <p class="lt-poem">Si pudiera elegir un lugar seguro, sería a tu lado. Cuanto más tiempo estoy contigo, más te amo.</p>
+      </div>
+      <div class="tree-col" id="lt-treeCol">
+        <div class="lt-ground-line"></div>
+        <div id="lt-seed"></div>
+        <div id="lt-trunk"></div>
+        <div id="lt-canopy"></div>
+      </div>
+    </div>
+
+    <p class="lt-disclaimer">
+    
+    </p>
+
+    <div class="lt-divider"><span class="lt-heart-ic">♥</span> Love You! <span class="lt-heart-ic">♥</span></div>
+
+    <p class="lt-counter-label">Mi amor por ti comenzó hace...</p>
+
+    <div class="lt-counter" id="lt-counter">
+      <div class="lt-unit"><span class="lt-num" id="lt-cd-days">0</span><span class="lt-unit-label">Días</span></div>
+      <div class="lt-unit"><span class="lt-num" id="lt-cd-hours">00</span><span class="lt-unit-label">Horas</span></div>
+      <div class="lt-unit"><span class="lt-num" id="lt-cd-minutes">00</span><span class="lt-unit-label">Minutos</span></div>
+      <div class="lt-unit"><span class="lt-num" id="lt-cd-seconds">00</span><span class="lt-unit-label">Segundos</span></div>
+    </div>
+
+    <button class="glow-btn" id="lovetree-continue-btn" style="margin-top:30px;">Continue</button>
+  </div>
+</section>
+
+<!-- ================= SCREEN 3.9: PROPOSAL ================= -->
+<section class="screen" id="screen-proposal">
+  <div class="sunset-sky"></div>
+  <div class="pr-cloud c1"></div>
+  <div class="pr-cloud c2"></div>
+  <div class="pr-cloud c3"></div>
+  <div class="pr-bird b1">^</div>
+  <div class="pr-bird b2">^</div>
+  <div class="pr-bird b3">^</div>
+  <div class="pr-sun"></div>
+  <div class="pr-tree t1">🌳</div>
+  <div class="pr-tree t2">🌲</div>
+  <div class="pr-tree t3">🌳</div>
+  <div class="pr-grass"></div>
+
+  <div class="hamster-couple">
+    <div class="hamster hamster-a">
+      <div class="hamster-ear ea1"></div><div class="hamster-ear ea2"></div>
+      <div class="hamster-head">
+        <div class="cheek left"></div><div class="cheek right"></div>
+        <div class="hamster-eye"></div><div class="hamster-eye e2"></div><div class="hamster-nose"></div>
+      </div>
+      <div class="hamster-body"></div>
+    </div>
+    <div class="hamster hamster-b">
+      <div class="hamster-ear eb1"></div><div class="hamster-ear eb2"></div>
+      <div class="hamster-head">
+        <div class="bow"></div>
+        <div class="cheek left"></div><div class="cheek right"></div>
+        <div class="hamster-eye"></div><div class="hamster-eye e2"></div><div class="hamster-nose"></div>
+      </div>
+      <div class="hamster-body"></div>
+    </div>
+    <div class="pr-heart h1">💗</div>
+    <div class="pr-heart h2">💕</div>
+  </div>
+
+  <div class="proposal-box">
+    <h1 class="proposal-q">Will you be my galaxy? 🌌</h1>
+    <div class="proposal-btns">
+      <button class="glow-btn" id="yes-btn">Yes 💫</button>
+      <button class="glow-btn no-btn" id="no-btn">No</button>
+    </div>
+  </div>
+
+  <div class="vortex-layer" id="vortex-layer"></div>
+</section>
+
+<!-- ================= SCREEN 4: FINAL GALAXY ================= -->
+<section class="screen" id="screen-galaxy">
+  <canvas class="bg-layer" id="galaxy-canvas"></canvas>
+  <div class="shooting-star-layer" id="shooting-layer"></div>
+  <div class="gx-title">
+    <h1>Happy Birthday My Butterfly ✨</h1>
+    <p>For you · my universe</p>
+  </div>
+  <div id="float-msgs"></div>
+  <div id="reveal-btn-wrap">
+    <button id="reveal-btn" title="Tap for a message">💌</button>
+  </div>
+  <div id="planet-hint">🌑 a hidden planet has appeared among the stars...</div>
+</section>
+
+<!-- ================= HIDDEN ANNIVERSARY PIN (unlocked after all 30 cards + letter) ================= -->
+<div id="pin-modal">
+  <div class="pin-bokeh b1"></div>
+  <div class="pin-bokeh b2"></div>
+  <div class="pin-bokeh b3"></div>
+  <div class="pin-bokeh b4"></div>
+  <button id="pin-close-btn" title="Close">✕</button>
+  <div class="glow-card pin-card">
+    <div class="planet-ring"></div>
+    <h1 class="title" style="font-size:24px;">A Hidden Planet Awaits</h1>
+    <p class="subtitle">Enter the day it all began</p>
+    <input type="text" id="pin-input" inputmode="numeric" maxlength="4" placeholder="• • • •" autocomplete="off">
+    <div id="pin-hint">4 digits ✨</div>
+    <button class="glow-btn" id="pin-submit">Unlock</button>
+  </div>
+</div>
+
+<!-- ================= AURORA / ARCHIPELAGO SCREEN ================= -->
+<section class="screen" id="screen-aurora">
+  <canvas class="bg-layer" id="aurora-canvas-3d"></canvas>
+  <p id="aurora-tap-hint">Tap the screen to walk forward...</p>
+</section>
+
+<!-- ================= STAR LETTER MODAL ================= -->
+<div id="star-letter-modal">
+  <div class="glow-card" style="max-width:440px;">
+    <div class="planet-ring" style="border-color:#cdeaff; box-shadow:0 0 18px #cdeaff, inset 0 0 12px rgba(205,234,255,0.5);"></div>
+    <h1 class="title" style="font-size:24px;">A Letter From the Stars</h1>
+    <div id="star-letter-body">
+      <p>My love,<br>Happy National Girlfriend's Day to the person who makes every ordinary day feel special.</p>
+      <p>I don't need a holiday to tell you this, but today feels like a good excuse to say it out loud:<br>
+      Thank you for your laugh that fixes my bad days.<br>
+      Thank you for the way you care about little things I forget.<br>
+      Thank you for choosing me, even on my messy days.</p>
+      <p>Being with you feels like coming home. You're my safe place, my favorite hello, and my hardest goodbye.<br>
+      I'm so proud to call you mine.</p>
+      <p>I love you more today than yesterday, Uhlale Ukhumbule Ukuthi Indoda Iyakuthanda Mama.<br>
+      ♥</p>
+    </div>
+    <button class="glow-btn" id="star-letter-close-btn">Close</button>
+  </div>
+</div>
+
+<!-- ================= HIDDEN POSTAL LETTER (revealed only after all 30 cards) ================= -->
+<div id="letter-modal">
+  <div class="heart-rain-layer" id="heart-rain-letter"></div>
+  <div class="letter-wrap">
+    <h1 class="letter-title" id="letter-title">Feliz Cumpleaños</h1>
+    <p class="letter-date">JULIO DE 2026</p>
+
+    <div class="envelope" id="envelope">
+      <div class="env-back"></div>
+      <div class="env-letter" id="env-letter-paper">
+        <div class="letter-body">
+          <p class="letter-salute">Mi Malindi,</p>
+          <p>Si estás leyendo esto, es porque hoy el universo entero celebra el día en que naciste. Cada año que pasa a tu lado se siente como descubrir una galaxia nueva.</p>
+          <p>Gracias por tu risa, por tu paciencia, por la manera en que conviertes lo ordinario en magia sin siquiera intentarlo.</p>
+          <p>Que este nuevo año te traiga tanta luz como la que tú le regalas a mi vida cada día.</p>
+          <p class="letter-signoff">— Tuyo, siempre ♥</p>
+        </div>
+      </div>
+      <div class="env-flap" id="env-flap"></div>
+      <div class="env-heart" id="env-heart">♥</div>
+    </div>
+
+    <p class="env-hint" id="env-hint">tap the envelope to open your surprise</p>
+    <button class="glow-btn" id="letter-close-btn" style="display:none;">Back to your stars</button>
+  </div>
+</div>
+
+<!-- ================= MESSAGE OVERLAY ================= -->
+<div id="cards-modal">
+  <button id="close-cards">✕</button>
+  <div class="msg-card" id="msg-card">
+    <div class="msg-star">★</div>
+    <div class="msg-count" id="msg-count">1 / 30</div>
+    <div class="msg-text" id="msg-text"></div>
+    <div class="msg-lang" id="msg-lang"></div>
+
+    <br>
+    <button id="next-msg-btn">Next ✨</button>
+    <div class="last-card-actions" id="last-card-actions" style="display:none;">
+      <button class="glow-btn" id="open-letter-btn">Open love letter 💌</button>
+      <button class="glow-btn ghost-btn" id="close-cards-final-btn">Close</button>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="script.js"></script>
+
+</body>
+</html>
