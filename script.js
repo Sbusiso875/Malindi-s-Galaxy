@@ -90,22 +90,42 @@ function tryUnlock(){
 document.getElementById('pw-submit').addEventListener('click', tryUnlock);
 pwInput.addEventListener('keydown', e=>{ if(e.key==='Enter') tryUnlock(); });
 
-/* ---------- Background song: starts at 0:25 once unlocked ---------- */
+/* ---------- Background song: starts at 0:15 once unlocked ---------- */
 function playBackgroundSong(){
   const audio = document.getElementById('bg-audio');
   const fallbackBtn = document.getElementById('music-fallback-btn');
   if(!audio) return;
-  const start = ()=>{
-    audio.currentTime = 25;
-    audio.play().catch(()=>{ fallbackBtn.style.display='flex'; fallbackBtn.style.alignItems='center'; fallbackBtn.style.justifyContent='center'; });
+
+  const showFallback = ()=>{
+    fallbackBtn.style.display='flex';
+    fallbackBtn.style.alignItems='center';
+    fallbackBtn.style.justifyContent='center';
   };
-  if(audio.readyState >= 1){ start(); }
-  else { audio.addEventListener('loadedmetadata', start, { once:true }); }
+
+  const start = ()=>{
+    audio.currentTime = 15;
+    audio.play().catch(showFallback);
+  };
+
+  // if the mp3 fails to load (missing file, wrong filename, wrong path) this
+  // fires instead of 'loadedmetadata' — without it the button never appears
+  audio.addEventListener('error', showFallback, { once:true });
+
+  // safety net: some browsers won't fire a clean 'error' event for a 404 file,
+  // so if nothing has happened after a few seconds, surface the manual button anyway
+  const safetyTimer = setTimeout(showFallback, 4000);
+
+  if(audio.readyState >= 1){
+    clearTimeout(safetyTimer);
+    start();
+  } else {
+    audio.addEventListener('loadedmetadata', ()=>{ clearTimeout(safetyTimer); start(); }, { once:true });
+  }
 }
 document.getElementById('music-fallback-btn').addEventListener('click', ()=>{
   const audio = document.getElementById('bg-audio');
-  audio.currentTime = 25;
-  audio.play();
+  audio.currentTime = 15;
+  audio.play().catch(()=>{});
   document.getElementById('music-fallback-btn').style.display='none';
 });
 
@@ -548,7 +568,7 @@ function runVortexTransition(){
 const galaxyMessages = [
  "TE AMO💖","LOVE U TO THE MOON AND BACK💗","PARA SIEMPRE💖","MI ESPOSA💕",
   "YOU ARE MY MAGIC ∞","LOVE U LOADSSSSSSS💕","MSHADO💘","MY INFINITE LOVE💖",
-  "FOREVER MINE💘","MASTOLE KA LUKHELA💕","MI VIDA💖","ALMA GEMELA💗", "iRUlER LAMI💕"  
+  "FOREVER MINE💘","MASTOLE KA LUKHELA💕","MI VIDA💖","ALMA GEMELA💗", "iRUlER LAMI💕" 
 ];
 
 let galaxyInited = false;
@@ -833,7 +853,7 @@ function drawGalaxyCanvas(){
   }
 
   const planetGroup = new THREE.Group();
-  planetGroup.position.set(52, 11, 28);
+  planetGroup.position.set(80, 1.4, -15);
   planetGroup.scale.setScalar(0.001);
   galaxyGroup.add(planetGroup);
 
@@ -1207,9 +1227,14 @@ function initAuroraScreen(){
   }
   const auroraRibbons = [];
   const ribbonDefs = [
-    { color:['rgba(15,174,116,0.75)','rgba(189,250,224,0.5)'], x:-30, y:95, z:-220, rotY:0.3, w:260, hgt:130 },
-    { color:['rgba(122,74,156,0.7)','rgba(215,156,240,0.5)'],  x:35,  y:105, z:-240, rotY:-0.25, w:230, hgt:150 },
-    { color:['rgba(23,201,143,0.55)','rgba(141,230,196,0.4)'], x:-60, y:80, z:-200, rotY:0.5, w:200, hgt:100 }
+    { color:['rgba(15,174,116,0.75)','rgba(189,250,224,0.5)'], x:-220, y:100, z:-230, rotY:0.55, w:340, hgt:150 },
+    { color:['rgba(122,74,156,0.7)','rgba(215,156,240,0.5)'],  x:-120, y:115, z:-250, rotY:0.35, w:320, hgt:170 },
+    { color:['rgba(23,201,143,0.55)','rgba(141,230,196,0.4)'], x:-20,  y:90,  z:-210, rotY:0.15, w:300, hgt:130 },
+    { color:['rgba(15,174,116,0.65)','rgba(189,250,224,0.45)'],x:60,   y:105, z:-235, rotY:-0.1, w:320, hgt:150 },
+    { color:['rgba(122,74,156,0.7)','rgba(215,156,240,0.5)'],  x:150,  y:118, z:-255, rotY:-0.35,w:330, hgt:170 },
+    { color:['rgba(23,201,143,0.55)','rgba(141,230,196,0.4)'], x:240,  y:95,  z:-215, rotY:-0.55,w:300, hgt:130 },
+    { color:['rgba(15,174,116,0.5)','rgba(189,250,224,0.35)'], x:-300, y:88,  z:-200, rotY:0.7,  w:280, hgt:120 },
+    { color:['rgba(122,74,156,0.55)','rgba(215,156,240,0.4)'], x:320,  y:92,  z:-205, rotY:-0.7, w:280, hgt:120 }
   ];
   ribbonDefs.forEach((def)=>{
     const tex = makeAuroraTexture(def.color[0], def.color[1]);
@@ -1422,28 +1447,36 @@ function initAuroraScreen(){
         spawnBurst(starSprite.position.clone());
         scene.remove(starSprite);
         starSprite = null;
-        setTimeout(()=>{ goTo('screen-galaxy'); }, 2000);
+        setTimeout(()=>{ goTo('screen-galaxy'); }, 2600);
       }
     }
     requestAnimationFrame(frame);
   }
 
   function spawnBurst(origin){
-    const count = 34;
-    for(let i=0;i<count;i++){
-      const mat = new THREE.SpriteMaterial({ map:glowTex, color:0xffffff, transparent:true, depthWrite:false, blending:THREE.AdditiveBlending });
-      const sp = new THREE.Sprite(mat);
-      const s = 0.8 + Math.random()*1.2;
-      sp.scale.set(s, s, 1);
-      sp.position.copy(origin);
-      const angle = Math.random()*Math.PI*2;
-      const speed = 0.6 + Math.random()*1.4;
-      sp.userData.vel = new THREE.Vector3(Math.cos(angle)*speed, -(0.4+Math.random()*1.4), Math.sin(angle)*speed*0.6);
-      sp.userData.life = 1.0;
-      sp.userData.decay = 0.006 + Math.random()*0.008;
-      scene.add(sp);
-      burstParticles.push(sp);
+    const palette = [0xffffff, 0xcfe6ff, 0xffd7ea];
+    function spawnWave(count, speedMin, speedMax, sizeMin, sizeMax, delay){
+      setTimeout(()=>{
+        for(let i=0;i<count;i++){
+          const mat = new THREE.SpriteMaterial({ map:glowTex, color:palette[i % palette.length], transparent:true, depthWrite:false, blending:THREE.AdditiveBlending });
+          const sp = new THREE.Sprite(mat);
+          const s = sizeMin + Math.random()*(sizeMax-sizeMin);
+          sp.scale.set(s, s, 1);
+          sp.position.copy(origin);
+          const angle = Math.random()*Math.PI*2;
+          const speed = speedMin + Math.random()*(speedMax-speedMin);
+          sp.userData.vel = new THREE.Vector3(Math.cos(angle)*speed, -(0.4+Math.random()*1.6), Math.sin(angle)*speed*0.6);
+          sp.userData.life = 1.0;
+          sp.userData.decay = 0.005 + Math.random()*0.007;
+          scene.add(sp);
+          burstParticles.push(sp);
+        }
+      }, delay);
     }
+    // a big first burst, then a second wave a beat later so the sky fills with falling mini stars
+    spawnWave(60, 0.7, 2.0, 0.6, 1.3, 0);
+    spawnWave(45, 0.5, 1.6, 0.4, 0.9, 120);
+    spawnWave(30, 0.9, 2.4, 0.7, 1.5, 260);
   }
 
   // ---- render loop ----
